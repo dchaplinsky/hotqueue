@@ -39,13 +39,17 @@ class HotQueue(object):
         :attr:`host`, :attr:`port`, :attr:`db`
     """
     
-    def __init__(self, name, serializer=None, **kwargs):
+    def __init__(self, name, serializer=None, client=None, **kwargs):
         self.name = name
         if serializer is not None:
             self.serializer = serializer
         else:
             self.serializer = pickle
-        self.__redis = Redis(**kwargs)
+        
+        if client:
+            self.__redis = client
+        else:
+            self.__redis = Redis(**kwargs)
     
     def __len__(self):
         return self.__redis.llen(self.key)
